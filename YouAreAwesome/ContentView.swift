@@ -4,6 +4,8 @@
 //
 //  Created by Damian Jardim on 1/26/25.
 //
+// .tint vs .foregroundStyle
+// .tint - interactive elements buttons and switches
 
 import SwiftUI
 
@@ -11,33 +13,39 @@ struct ContentView: View {
     
     // struct var cannot be changed unless we add it to state
     // private access modifier -
-    @State private var messageContentView = "ContentView child"
-    
+    @State private var message = "Great"
     
     var body: some View {
 
-        // can be changed
-        var messageBody = "Body child"
-        
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("This changes")
-                .fontWeight(Font.Weight.heavy)
+            Image(systemName: "swift")
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(.orange)
+            Text(message)
+                .fontWeight(Font.Weight.ultraLight)
                 .font(Font.title)
+                .foregroundStyle(.black)
             
-            Text(messageBody)
-
-            // trailing closure
-            Button("Click Me!"){
-                // direct children of the ContentView:View struct cannot be changed by the struct
-                messageContentView = "Awesome View"
+            HStack{
+               
+                Button("Awesome"){
+                    message = "Awesome"
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.orange)
+                .font(.title2)
                 
-                // the messageBody is not a direct child of the ContentView:View so it can be changed.
-                messageBody = "Awesome Body"
-                
+                Button("Great"){
+                    message = "Great"
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.orange)
+                .font(.title2)
             }
+            
+            
+            
         }
         .padding()
     }
