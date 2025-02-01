@@ -13,43 +13,41 @@ struct ContentView: View {
     
     // struct var cannot be changed unless we add it to state
     // private access modifier -
-    @State private var message = "Great"
+    @State private var message = ""
+    @State private var imageName = ""
     
     var body: some View {
-
+        
         VStack {
             Spacer()
             
-            
-            
-            Image(systemName: "swift")
+            Image(systemName: imageName)
                 .resizable()
                 .scaledToFit()
                 .foregroundStyle(.orange)
-                .frame(width: 100, height: 100)
-
             
             Text(message)
-                .fontWeight(Font.Weight.ultraLight)
-                .font(Font.title)
-                .foregroundStyle(.black)
+                .font(.largeTitle)
+                .fontWeight(.ultraLight)
+            
             Spacer()
-            HStack{
-               
-                Button("Awesome"){
-                    message = "Awesome"
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.orange)
-                .font(.title2)
+            
+            Button("Press Me!"){
+                let message1 = "You are Awesome!"
+                let message2 = "You are Great!"
+                let image1 = "hand.thumbsup"
+                let image2 = "sun.max.fill"
                 
-                Button("Great"){
-                    message = "Great"
+                if(message == message1){
+                    message = message2
+                    imageName = image2
+                } else {
+                    message = message1
+                    imageName = image1
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.orange)
-                .font(.title2)
             }
+            .buttonStyle(.borderedProminent)
+            .tint(.orange)
             
         }
         .padding()
