@@ -14,14 +14,15 @@ struct ContentView: View {
     // struct var cannot be changed unless we add it to state
     // private access modifier -
     @State private var message = ""
-    @State private var imageName = ""
+    @State private var imageNumber = 0
+    @State private var imageString = "image"
     
     var body: some View {
         
         VStack {
             Spacer()
             
-            Image(imageName)
+            Image(imageString)
                 .resizable()
                 .scaledToFit()
                 .clipShape(RoundedRectangle(cornerRadius: 20))
@@ -34,14 +35,21 @@ struct ContentView: View {
             
             Spacer()
             
-            Button("Press Me!"){
+            Text(imageString)
+            Text(String(imageNumber))
+            Button("Show Message"){
                 let message1 = "You are Awesome!"
                 let message2 = "You are Great!"
-                let imageString1 = "image0"
-                let imageString2 = "image1"
                 
                 message = ( message == message1 ? message2 : message1)
-                imageName = (imageName == imageString1 ? imageString2: imageString1)
+                
+                if(imageString == "image" || imageString == "image9"){
+                    imageNumber = 0
+                    imageString = "image" + String(imageNumber)
+                } else{
+                    imageNumber += 1
+                    imageString = "image" + String(imageNumber)
+                }
             }
             .buttonStyle(.borderedProminent)
             .tint(.orange)
