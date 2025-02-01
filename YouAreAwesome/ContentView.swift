@@ -4,8 +4,7 @@
 //
 //  Created by Damian Jardim on 1/26/25.
 //
-// .tint vs .foregroundStyle
-// .tint - interactive elements buttons and switches
+
 
 import SwiftUI
 
@@ -13,7 +12,14 @@ struct ContentView: View {
     
     // struct var cannot be changed unless we add it to state
     // private access modifier -
-    @State private var message = ""
+    @State private var messageNumber:Int = 0
+    let messages: [String] = ["You are Awesome!",
+                                             "You are amazing!",
+                                             "You are incredible!",
+                                             "Good on you",
+                                             "Way to Go",
+                                             "Incredible"]
+    @State private var message = "";
     @State private var imageNumber = 0
     @State private var imageString = "image"
     
@@ -34,22 +40,23 @@ struct ContentView: View {
                 .foregroundStyle(.red)
             
             Spacer()
-            
-            Text(imageString)
-            Text(String(imageNumber))
+
             Button("Show Message"){
-                let message1 = "You are Awesome!"
-                let message2 = "You are Great!"
                 
-                message = ( message == message1 ? message2 : message1)
+                message = messages[messageNumber]
+                messageNumber += 1
                 
-                if(imageString == "image" || imageString == "image9"){
-                    imageNumber = 0
-                    imageString = "image" + String(imageNumber)
-                } else{
-                    imageNumber += 1
-                    imageString = "image" + String(imageNumber)
+                if(messageNumber > messages.count - 1){
+                    messageNumber = 0
                 }
+             
+                if(imageNumber > 9){
+                    imageNumber = 0
+                }
+                
+                imageString = "image\(imageNumber)"
+                imageNumber += 1
+              
             }
             .buttonStyle(.borderedProminent)
             .tint(.orange)
