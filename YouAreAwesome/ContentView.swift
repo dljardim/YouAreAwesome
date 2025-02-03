@@ -8,16 +8,22 @@
 
 
 import SwiftUI
+import AVFAudio
 
 struct ContentView: View {
     
     // struct var cannot be changed unless we add it to state
     // private access modifier -
     @State private var messageNumber:Int = 0
- 
+    
     @State private var message = "";
     @State private var imageNumber = 0
     @State private var imageString = "image"
+    
+    // implicitly unwrapping nils
+    @State private var audioPlayer: AVAudioPlayer!
+    @State private var soundName = "sound"
+    let numberOfImages = 9
     
     var body: some View {
         
@@ -51,31 +57,14 @@ struct ContentView: View {
                                           "Way to Go",
                                           "Incredibly Incredible"]
                 
-
-                // while loop - inside loop only runs on conditional
-                var nextImageWhile = "image\(String(Int.random(in:0...9)))"
-                while(imageString == nextImageWhile){
-                    nextImageWhile = "image\(String(Int.random(in:0...9)))"
-                }
-                imageString = nextImageWhile
                 
                 
-                // repeat - inside of repeat is executed at least ONCE
-                var nextImageRepeat = "image\(String(Int.random(in:0...9)))"
+                // repeat - imageString
+                var nextImageRepeat = "image\(String(Int.random(in:0...numberOfImages)))"
                 repeat{
-                    nextImageRepeat = "image\(String(Int.random(in:0...9)))"
+                    nextImageRepeat = "image\(String(Int.random(in:0...numberOfImages)))"
                 } while(nextImageRepeat == imageString)
                 imageString = nextImageRepeat
-                          
-                print("imageString:",nextImageRepeat)
-                
-                
-                // while loop - messages
-                var nextMessageWhile = messages[(Int.random(in:0...(messages.count-1)))]
-                while(message == nextMessageWhile){
-                    nextMessageWhile = messages[(Int.random(in:0...(messages.count-1)))]
-                }
-                message = nextMessageWhile
                 
                 // repeat loop - messages
                 var nextMessageRepeat = messages[(Int.random(in:0...(messages.count-1)))]
@@ -83,7 +72,29 @@ struct ContentView: View {
                     nextMessageRepeat = messages[(Int.random(in:0...(messages.count-1)))]
                 } while(nextMessageRepeat == message)
                 message = nextMessageRepeat
-         
+                
+                
+                // get the name of the next sound to play
+                var nextSoundName = ""
+                repeat{
+                    nextSoundName = "sound\(String(Int.random(in:0...5)))"
+                } while(soundName == nextSoundName)
+                soundName = nextSoundName
+                
+                // check if that file exists and can be played
+                guard let soundFile = NSDataAsset(name: soundName) else {
+                    print("😡 Could not read file name \(soundName)")
+                    return
+                }
+                
+                // play the sound
+                do{
+                    audioPlayer = try AVAudioPlayer(data: soundFile.data)
+                    audioPlayer.play()
+                }catch{
+                    print("😡 ERROR: \(error.localizedDescription) creating audioPlayer")
+                }
+                
             }
             .buttonStyle(.borderedProminent)
             .tint(.orange)
