@@ -23,7 +23,37 @@ struct ContentView: View {
     // implicitly unwrapping nils
     @State private var audioPlayer: AVAudioPlayer!
     @State private var soundName = "sound"
+    @State private var soundNumber = 0
+    
+    let numberOfSounds = 6
     let numberOfImages = 9
+    
+    func playSound(soundName:String){
+        // check if that file exists and can be played
+        guard let soundFile = NSDataAsset(name: soundName) else {
+            print("😡 Could not read file name \(soundName)")
+            return
+        }
+        
+        // play the sound
+        do{
+            audioPlayer = try AVAudioPlayer(data: soundFile.data)
+            audioPlayer.play()
+        }catch{
+            print("😡 ERROR: \(error.localizedDescription) creating audioPlayer")
+        }
+    }
+    
+    
+    
+    func nonRepeatingRandom(lastNumber:Int, upperBounds:Int)->Int{
+        
+        var newRandomValue:Int = Int.random(in: 0...upperBounds)
+        while(lastNumber == newRandomValue){
+            newRandomValue = Int.random(in: 0...upperBounds)
+        }
+        return newRandomValue
+    }
     
     var body: some View {
         
@@ -47,57 +77,40 @@ struct ContentView: View {
             
             Spacer()
             
-            Button("Show Message"){
+            HStack {
+              
                 
-                let messages: [String] = ["You are Awesome!",
-                                          "You are amazing!",
-                                          "If I were judging you from 1 to 10. You are most definately an Eleven",
-                                          "You are incredible!",
-                                          "Good on you",
-                                          "Way to Go",
-                                          "Incredibly Incredible"]
-                
-                
-                
-                // repeat - imageString
-                var nextImageRepeat = "image\(String(Int.random(in:0...numberOfImages)))"
-                repeat{
-                    nextImageRepeat = "image\(String(Int.random(in:0...numberOfImages)))"
-                } while(nextImageRepeat == imageString)
-                imageString = nextImageRepeat
-                
-                // repeat loop - messages
-                var nextMessageRepeat = messages[(Int.random(in:0...(messages.count-1)))]
-                repeat{
-                    nextMessageRepeat = messages[(Int.random(in:0...(messages.count-1)))]
-                } while(nextMessageRepeat == message)
-                message = nextMessageRepeat
-                
-                
-                // get the name of the next sound to play
-                var nextSoundName = ""
-                repeat{
-                    nextSoundName = "sound\(String(Int.random(in:0...5)))"
-                } while(soundName == nextSoundName)
-                soundName = nextSoundName
-                
-                // check if that file exists and can be played
-                guard let soundFile = NSDataAsset(name: soundName) else {
-                    print("😡 Could not read file name \(soundName)")
-                    return
+                Button("Show Message"){
+                    
+                    print("click")
+                    
+                    let messages: [String] = ["You are Awesome!",
+                                              "You are amazing!",
+                                              "If I were judging you from 1 to 10. You are most definately an Eleven",
+                                              "You are incredible!",
+                                              "Good on you",
+                                              "Way to Go",
+                                              "Incredibly Incredible"]
+                    
+                    
+                    
+                    // image to display
+                    let nextImageRepeat = "image\(nonRepeatingRandom(lastNumber: imageNumber, upperBounds: numberOfImages))"
+                    imageString = nextImageRepeat
+                    
+                    // message to display
+                    let nextMessageRepeat = messages[(nonRepeatingRandom(lastNumber:messageNumber, upperBounds: messages.count-1))]
+                    message = nextMessageRepeat
+                    
+                    // sound number
+                    let nextSoundNumber = nonRepeatingRandom(lastNumber: soundNumber, upperBounds: numberOfSounds-1)
+                    soundNumber = nextSoundNumber
+                    
+                    playSound(soundName: "sound\(soundNumber)")
                 }
-                
-                // play the sound
-                do{
-                    audioPlayer = try AVAudioPlayer(data: soundFile.data)
-                    audioPlayer.play()
-                }catch{
-                    print("😡 ERROR: \(error.localizedDescription) creating audioPlayer")
-                }
-                
+                .buttonStyle(.borderedProminent)
+                .tint(.orange)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.orange)
             
         }
         .padding()
