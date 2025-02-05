@@ -27,10 +27,19 @@ struct ContentView: View {
     
     @State private var isOnAudio:Bool = true
     
-    let numberOfSounds = 6
+    let numberOfSounds = 5
     let numberOfImages = 9
     
     func playSound(soundName:String){
+        // check the toggle before playing
+        if(!isOnAudio){
+            return
+        }
+        
+        if(audioPlayer != nil && audioPlayer.isPlaying){
+            audioPlayer.stop()
+        }
+        
         // check if that file exists and can be played
         guard let soundFile = NSDataAsset(name: soundName) else {
             print("😡 Could not read file name \(soundName)")
@@ -77,10 +86,8 @@ struct ContentView: View {
                 .shadow(radius: 30)
                 .animation(.default, value:imageString)
             
-            
             Spacer()
             
-            // Sound On / Toggle / Show Message
             HStack {
                 
                 // sound toggle
@@ -88,6 +95,9 @@ struct ContentView: View {
                     Text("Sound On:")
                     Toggle("", isOn: $isOnAudio)
                         .labelsHidden()
+                        .onChange(of: isOnAudio){
+                            audioPlayer.stop()
+                        }
                 }
                 
                 Spacer()
@@ -117,7 +127,6 @@ struct ContentView: View {
                         
                         playSound(soundName: "sound\(soundNumber)")
                     }
-                    
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.orange)
