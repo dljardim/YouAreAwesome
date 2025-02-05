@@ -25,6 +25,8 @@ struct ContentView: View {
     @State private var soundName = "sound"
     @State private var soundNumber = 0
     
+    @State private var isOnAudio:Bool = true
+    
     let numberOfSounds = 6
     let numberOfImages = 9
     
@@ -45,7 +47,6 @@ struct ContentView: View {
     }
     
     
-    
     func nonRepeatingRandom(lastNumber:Int, upperBounds:Int)->Int{
         
         var newRandomValue:Int = Int.random(in: 0...upperBounds)
@@ -54,6 +55,7 @@ struct ContentView: View {
         }
         return newRandomValue
     }
+    
     
     var body: some View {
         
@@ -75,14 +77,22 @@ struct ContentView: View {
                 .shadow(radius: 30)
                 .animation(.default, value:imageString)
             
+            
             Spacer()
             
+            // Sound On / Toggle / Show Message
             HStack {
-              
+                
+                // sound toggle
+                HStack{
+                    Text("Sound On:")
+                    Toggle("", isOn: $isOnAudio)
+                        .labelsHidden()
+                }
+                
+                Spacer()
                 
                 Button("Show Message"){
-                    
-                    print("click")
                     
                     let messages: [String] = ["You are Awesome!",
                                               "You are amazing!",
@@ -92,8 +102,6 @@ struct ContentView: View {
                                               "Way to Go",
                                               "Incredibly Incredible"]
                     
-                    
-                    
                     // image to display
                     let nextImageRepeat = "image\(nonRepeatingRandom(lastNumber: imageNumber, upperBounds: numberOfImages))"
                     imageString = nextImageRepeat
@@ -102,16 +110,18 @@ struct ContentView: View {
                     let nextMessageRepeat = messages[(nonRepeatingRandom(lastNumber:messageNumber, upperBounds: messages.count-1))]
                     message = nextMessageRepeat
                     
-                    // sound number
-                    let nextSoundNumber = nonRepeatingRandom(lastNumber: soundNumber, upperBounds: numberOfSounds-1)
-                    soundNumber = nextSoundNumber
+                    // play sound - toggle
+                    if(isOnAudio){
+                        let nextSoundNumber = nonRepeatingRandom(lastNumber: soundNumber, upperBounds: numberOfSounds-1)
+                        soundNumber = nextSoundNumber
+                        
+                        playSound(soundName: "sound\(soundNumber)")
+                    }
                     
-                    playSound(soundName: "sound\(soundNumber)")
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.orange)
             }
-            
         }
         .padding()
     }
