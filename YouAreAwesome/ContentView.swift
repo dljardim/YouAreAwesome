@@ -129,14 +129,19 @@ struct ContentView: View {
                     }
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(.orange)
             }
+            .tint(.accentColor)
         }
         .padding()
     }
 }
 
-#Preview {
+#Preview("Light Mode") {
     ContentView()
+        .preferredColorScheme(.light)
 }
 
+#Preview("Dark Mode") {
+    ContentView()
+        .preferredColorScheme(.light)
+}
